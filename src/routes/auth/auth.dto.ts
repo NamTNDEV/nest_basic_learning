@@ -20,11 +20,15 @@ export class RegisterReqDto extends LoginReqDto {
 export class LoginResDto { };
 
 export class RegisterResDto {
-    id: string;
+    id: number;
     email: string;
     name: string;
     @Exclude()
     password: string;
     createdAt: Date;
     updatedAt: Date;
+
+    constructor(partial: Partial<RegisterResDto>) {
+        Object.assign(this, partial);
+    }
 };

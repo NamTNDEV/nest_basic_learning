@@ -15,10 +15,11 @@ export class AuthController {
         };
     }
 
-    @SerializeOptions({ type: RegisterResDto })
+    // @SerializeOptions({ type: RegisterResDto })
     @Post('register')
     async register(@Body() body: RegisterReqDto) {
         const result = await this.authService.register(body);
-        return result;
+        const responseData = new RegisterResDto(result);
+        return responseData;
     }
 }
