@@ -1,6 +1,7 @@
+import { Exclude } from "class-transformer";
 import { IsString } from "class-validator";
 
-export class LoginBodyDto {
+export class LoginReqDto {
     @IsString({ message: 'Email must be a string' })
     email: string;
 
@@ -8,10 +9,22 @@ export class LoginBodyDto {
     password: string;
 };
 
-export class RegisterBodyDto extends LoginBodyDto {
+export class RegisterReqDto extends LoginReqDto {
     @IsString({ message: 'Name must be a string' })
     name: string;
 
     @IsString({ message: 'Confirm password must be a string' })
     confirmPassword: string;
+};
+
+export class LoginResDto { };
+
+export class RegisterResDto {
+    id: string;
+    email: string;
+    name: string;
+    @Exclude()
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
 };
