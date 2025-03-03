@@ -10,7 +10,7 @@ export class AccessTokenGuard implements CanActivate {
         context: ExecutionContext,
     ): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
-        const accessToken = request.headers['authorization'].split(' ')[1];
+        const accessToken = request.headers['authorization'] ? request.headers['authorization'].split(' ')[1] : null;
         if (!accessToken) {
             // return false;
             throw new UnauthorizedException("Access token is required");

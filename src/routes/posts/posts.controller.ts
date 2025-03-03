@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { PostsService } from './posts.service';
+import { Auth } from 'src/shared/decorators/auth.decorator';
+import { AUTH_TYPE, CONDITION_GUARD_TYPE } from 'src/shared/constants/auth.constant';
 
 @Controller('posts')
 export class PostsController {
     constructor(private postsService: PostsService) { }
 
+    @Auth([AUTH_TYPE.BEARER, AUTH_TYPE.API_KEY], { conditionGuard: CONDITION_GUARD_TYPE.AND })
     @Get('')
     async getPosts() {
         const posts = await this.postsService.getPosts();

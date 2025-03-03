@@ -2,6 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post, SerializeOptions, UseGuar
 import { AuthService } from './auth.service';
 import { LoginReqDto, LoginResDto, RefreshTokenResDto, RegisterReqDto, RegisterResDto } from './auth.dto';
 import { AccessTokenGuard } from 'src/shared/guards/access-token.guard';
+import { ApiKeyGuard } from 'src/shared/guards/api-key.guard';
 
 @Controller('auth')
 export class AuthController {

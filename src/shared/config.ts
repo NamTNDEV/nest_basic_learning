@@ -22,6 +22,8 @@ class ConfigEnvSchema {
     JWT_REFRESH_TOKEN_PRIVATE_KEY: string;
     @IsString()
     JWT_ACCESS_TOKEN_PRIVATE_KEY: string;
+    @IsString()
+    API_KEY: string;
 }
 
 const configEnvInstance = plainToInstance(ConfigEnvSchema, process.env);
