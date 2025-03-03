@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { HashService } from 'src/shared/services/hash.service';
 import { PrismaService } from 'src/shared/services/prisma.service';
 import { TokenService } from 'src/shared/services/token.service';
@@ -79,13 +80,37 @@ export class AuthService {
                 },
             });
             const tokensPair = await this.generateTokensPair({ userId: createUser.id });
-            return createUser;
+            return tokensPair;
         } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
                 throw new ConflictException('Email already exists');
             }
 
             throw error;
+        }
+    }
+
+    async refreshToken(refreshToken: string) {
+        try {
+            const decodedRefreshToken = await this.tokenService.verifyRefreshToken(refreshToken);
+            await this.prismaService.refreshToken.findUniqueOrThrow({
+                where: {
+                    token: refreshToken,
+                },
+            });
+            await this.prismaService.refreshToken.delete({
+                where: {
+                    token: refreshToken,
+                },
+            });
+            const tokensPair = await this.generateTokensPair({ userId: decodedRefreshToken.userId });
+            return tokensPair;
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+                throw new UnauthorizedException('Refresh token has been revoked');
+            }
+
+            throw new UnauthorizedException('Invalid refresh token');
         }
     }
 }

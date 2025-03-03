@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
 import { IsString } from "class-validator";
 
+// ::: REQUEST :::
 export class LoginReqDto {
     @IsString({ message: 'Email must be a string' })
     email: string;
@@ -17,6 +18,13 @@ export class RegisterReqDto extends LoginReqDto {
     confirmPassword: string;
 };
 
+export class RefreshTokenReqDto {
+    @IsString({ message: 'Refresh token must be a string' })
+    refreshToken: string;
+}
+
+
+// ::: RESPONSE :::
 export class LoginResDto {
     accessToken: string;
     refreshToken: string;
@@ -26,16 +34,6 @@ export class LoginResDto {
     }
 };
 
-export class RegisterResDto {
-    id: number;
-    email: string;
-    name: string;
-    @Exclude()
-    password: string;
-    createdAt: Date;
-    updatedAt: Date;
+export class RegisterResDto extends LoginResDto { };
 
-    constructor(partial: Partial<RegisterResDto>) {
-        Object.assign(this, partial);
-    }
-};
+export class RefreshTokenResDto extends LoginResDto { }
