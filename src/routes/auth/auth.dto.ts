@@ -1,5 +1,6 @@
 import { Exclude } from "class-transformer";
 import { IsString } from "class-validator";
+import { IsMatch } from "src/shared/decorators/custom-validation.decorator";
 
 // ::: REQUEST :::
 export class LoginReqDto {
@@ -15,6 +16,7 @@ export class RegisterReqDto extends LoginReqDto {
     name: string;
 
     @IsString({ message: 'Confirm password must be a string' })
+    @IsMatch('password', { message: 'Passwords do not match' })
     confirmPassword: string;
 };
 
