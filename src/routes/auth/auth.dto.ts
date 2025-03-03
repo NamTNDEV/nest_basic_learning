@@ -25,6 +25,8 @@ export class RefreshTokenReqDto {
     refreshToken: string;
 }
 
+export class LogoutReqDto extends RefreshTokenReqDto { }
+
 
 // ::: RESPONSE :::
 export class LoginResDto {
@@ -39,3 +41,11 @@ export class LoginResDto {
 export class RegisterResDto extends LoginResDto { };
 
 export class RefreshTokenResDto extends LoginResDto { }
+
+export class LogoutResDto {
+    message: string;
+
+    constructor(partial: Partial<LogoutResDto>) {
+        Object.assign(this, partial);
+    }
+}
