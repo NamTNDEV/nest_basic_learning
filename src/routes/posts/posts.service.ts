@@ -19,13 +19,12 @@ export class PostsService {
         return post;
     }
 
-    async createPost(payload: { title: string, content: string }) {
-        const userId = 1;
+    async createPost(payload: { title: string, content: string, userId: number }) {
         const post = await this.prismaService.post.create({
             data: {
                 title: payload.title,
                 content: payload.content,
-                authorId: userId
+                authorId: payload.userId
             }
         });
         return post;

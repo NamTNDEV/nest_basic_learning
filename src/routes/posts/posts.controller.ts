@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nes
 import { PostsService } from './posts.service';
 import { Auth } from 'src/shared/decorators/auth.decorator';
 import { AUTH_TYPE, CONDITION_GUARD_TYPE } from 'src/shared/constants/auth.constant';
+import { CreatePostReqDto } from './posts.dto';
+import { ActiveUser } from 'src/shared/decorators/active-user.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -27,8 +29,12 @@ export class PostsController {
     }
 
     @Post('')
-    async createPost(@Body() body: { title: string, content: string }) {
-        const createdPost = await this.postsService.createPost(body);
+    @Auth([AUTH_TYPE.BEARER])
+    async createPost(@Body() body: CreatePostReqDto, @ActiveUser('userId') userId: number) {
+        const createdPost = await this.postsService.createPost({
+            ...body,
+            userId
+        });
         return {
             message: 'Post created successfully',
             result: { createdPost }
