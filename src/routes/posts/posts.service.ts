@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import configEnv from 'src/shared/config';
 import { PrismaService } from 'src/shared/services/prisma.service';
 
 
@@ -7,8 +6,19 @@ import { PrismaService } from 'src/shared/services/prisma.service';
 export class PostsService {
     constructor(private readonly prismaService: PrismaService) { }
 
-    async getPosts() {
-        const posts = await this.prismaService.post.findMany();
+    async getPosts(userId: number) {
+        const posts = await this.prismaService.post.findMany({
+            where: {
+                authorId: userId,
+            },
+            include: {
+                author: {
+                    omit: {
+                        password: true
+                    }
+                }
+            }
+        });
         return posts;
     }
 

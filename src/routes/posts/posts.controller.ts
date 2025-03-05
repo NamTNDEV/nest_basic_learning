@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nes
 import { PostsService } from './posts.service';
 import { Auth } from 'src/shared/decorators/auth.decorator';
 import { AUTH_TYPE, CONDITION_GUARD_TYPE } from 'src/shared/constants/auth.constant';
-import { CreatePostReqDto } from './posts.dto';
+import { CreatePostReqDto, GetPostsResDto } from './posts.dto';
 import { ActiveUser } from 'src/shared/decorators/active-user.decorator';
 
 @Controller('posts')
@@ -11,12 +11,10 @@ export class PostsController {
 
     @Auth([AUTH_TYPE.BEARER, AUTH_TYPE.API_KEY], { conditionGuard: CONDITION_GUARD_TYPE.AND })
     @Get('')
-    async getPosts() {
-        const posts = await this.postsService.getPosts();
-        return {
-            message: 'Posts fetched successfully',
-            result: { posts }
-        };
+    async getPosts(@ActiveUser('userId') userId: number) {
+        const posts = await this.postsService.getPosts(userId);
+        const result = posts.map((post) => new GetPostsResDto(post));
+        return result;
     }
 
     @Get(':id')
